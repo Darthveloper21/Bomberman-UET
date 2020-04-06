@@ -24,6 +24,6 @@ You can press the esc key at any time to exit the game.
 Rar file contains exe file, it runs the game without .cpp or .rc files.
 
 ### Hope you enjoy my project <3
-I do trying to add bomb-pocket-power pill (player can set more than just one bomb at the same time), but a lot of issues appear and my coding kills have limitation :(((.
+I do trying to add bomb-pocket-power pill (player can set more than just one bomb at the same time), but a lot of issues appear and my coding skills have limitation :(((.
 It gonna requires a lot of change in my code which is working very fine at the moment :(((
 I will try to add this feature to the game but i can't promise so ... this could be the last version as i mentioned.
