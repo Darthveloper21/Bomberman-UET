@@ -1,5 +1,5 @@
 # Bomberman-UET
-Another game coded by 19021268 :3
+Another game coded by 19021268
 
 ## Version
 This could be the last version.
