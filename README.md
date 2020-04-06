@@ -1,7 +1,7 @@
 # Bomberman-UET
 Another game coded by 19021268
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)  
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://spdx.org/licenses/MIT.html)  
 
 ## Version
 This could be the last version.
