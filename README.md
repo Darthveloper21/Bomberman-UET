@@ -5,7 +5,7 @@ Another game coded by 19021268
 This could be the last version.
 
 ## About game
-This a two players game, the mission of each player is to defeat the other one by the one and only weapon in the game: bomb
+This is a two players game, the mission of each player is to defeat the other one by the one and only weapon in the game: bomb
 
 The player movement could be hard to control but this is the best i can do :(((
 
