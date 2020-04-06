@@ -15,6 +15,8 @@ There are only two kinds of power pill, fire to increase the length of your bomb
 
 If a player is in the explosion arena, he/she loses.
 
+Sound effect works a bit ... bad.
+
 You can press the esc key at any time to exit the game.
 
 ### Hope you enjoy my project <3
