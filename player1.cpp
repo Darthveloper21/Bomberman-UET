@@ -114,7 +114,6 @@ void player1::update1(float delta, const Uint8 *keyState, char status_map[][100]
             initbomb[press_cnt] = bombtime[press_cnt];
             explode[press_cnt] = true;
             press_cnt++;
-            cout << press_cnt << endl;
         }
     }
     else active = false;
@@ -156,23 +155,27 @@ void player1::update1(float delta, const Uint8 *keyState, char status_map[][100]
                 if(status_map[bx[cnt]][by[cnt]] != '2') {bomb_map[bx[cnt]][by[cnt]] = '0'; status_map[bx[cnt]][by[cnt]] = '0';}
                 for(int i = 0; i <= bomb_length1; ++i)
                 {
-                    if(status_map[bx[cnt] + i][by[cnt]] != '2' && bx[cnt] + i < 14) {bomb_map[bx[cnt] + i][by[cnt]] = '0'; status_map[bx[cnt] + i][by[cnt]] = '0';}
-                    else break;
+                    if(status_map[bx[cnt] + i][by[cnt]] == '0' && bx[cnt] + i < 14) {bomb_map[bx[cnt] + i][by[cnt]] = '0'; status_map[bx[cnt] + i][by[cnt]] = '0';}
+                    if(status_map[bx[cnt] + i][by[cnt]] == '1') {bomb_map[bx[cnt] + i][by[cnt]] = '0'; status_map[bx[cnt] + i][by[cnt]] = '0'; break;}
+                    if(status_map[bx[cnt] + i][by[cnt]] == '2') break;
                 }
                 for(int i = 0; i <= bomb_length1; ++i)
                 {
-                    if(status_map[bx[cnt] - i][by[cnt]] != '2' && bx[cnt] - i > 0) {bomb_map[bx[cnt] - i][by[cnt]] = '0'; status_map[bx[cnt] - i][by[cnt]] = '0';}
-                    else break;
+                    if(status_map[bx[cnt] - i][by[cnt]] == '0' && bx[cnt] - i > 0)  {bomb_map[bx[cnt] - i][by[cnt]] = '0'; status_map[bx[cnt] - i][by[cnt]] = '0';}
+                    if(status_map[bx[cnt] - i][by[cnt]] == '1') {bomb_map[bx[cnt] - i][by[cnt]] = '0'; status_map[bx[cnt] - i][by[cnt]] = '0'; break;}
+                    if(status_map[bx[cnt] - i][by[cnt]] == '2') break;
                 }
                 for(int i = 0; i <= bomb_length1; ++i)
                 {
-                    if(status_map[bx[cnt]][by[cnt] + i] != '2' && by[cnt] + i < 17) {bomb_map[bx[cnt]][by[cnt] + i] = '0'; status_map[bx[cnt]][by[cnt] + i] = '0';}
-                    else break;
+                    if(status_map[bx[cnt]][by[cnt] + i] == '0' && by[cnt] + i < 17) {bomb_map[bx[cnt]][by[cnt] + i] = '0'; status_map[bx[cnt]][by[cnt] + i] = '0';}
+                    if(status_map[bx[cnt]][by[cnt] + i] == '1') {bomb_map[bx[cnt]][by[cnt] + i] = '0'; status_map[bx[cnt]][by[cnt] + i] = '0'; break;}
+                    if(status_map[bx[cnt]][by[cnt] + i] == '2') break;
                 }
                 for(int i = 0; i <= bomb_length1; ++i)
                 {
-                    if(status_map[bx[cnt]][by[cnt] - i] != '2' && by[cnt] - i > 0) {bomb_map[bx[cnt]][by[cnt] - i] = '0'; status_map[bx[cnt]][by[cnt] - i] = '0';}
-                    else break;
+                    if(status_map[bx[cnt]][by[cnt] - i] == '0' && by[cnt] + i > 0)  {bomb_map[bx[cnt]][by[cnt] - i] = '0'; status_map[bx[cnt]][by[cnt] - i] = '0';}
+                    if(status_map[bx[cnt]][by[cnt] - i] == '1') {bomb_map[bx[cnt]][by[cnt] - i] = '0'; status_map[bx[cnt]][by[cnt] - i] = '0'; break;}
+                    if(status_map[bx[cnt]][by[cnt] - i] == '2') break;
                 }
                 explode[cnt] = false;
                 press_cnt--;
