@@ -80,7 +80,7 @@ void player1::update1(float delta, const Uint8 *keyState, char status_map[][100]
                 position_rect1.y = ((position_rect1.y + frame_height) / 64 - 1) * 64 + 63 - frame_height;
             cropRect.y = 0;
         }
-        else if(keyState[keys[2]]) // left
+        if(keyState[keys[2]]) // left
         {
             position_rect1.x -= move_speed1 * delta;
             if(status_map[position_rect1.y / 64][position_rect1.x / 64] != '0' or
@@ -96,7 +96,7 @@ void player1::update1(float delta, const Uint8 *keyState, char status_map[][100]
                 position_rect1.x = ((position_rect1.x + frame_width) / 64 - 1) * 64 + 63 - frame_width;
             cropRect.y = frame_height * 3;
         }
-        else
+        else if(!keyState[keys[0]] && !keyState[keys[1]] && !keyState[keys[2]] && !keyState[keys[3]])
         {
             active = false;
         }
