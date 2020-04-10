@@ -20,11 +20,11 @@ private:
     SDL_Scancode keys[6];
 
     // bomb value
-    int bombtime = 0;
-    int initbomb = 0;
-    int waittime = 1200;
-    bool explode = false;
-    int bx = 0, by = 0;
+    int bombtime[10] = {0};
+    int initbomb[10] = {0};
+    int waittime = 1300;
+    bool explode[10] = {false};
+    int bx[10] = {0}, by[10] = {0}, pocket = 1, press_cnt = 0;
 
     //sound
     Mix_Chunk* setbomb = Mix_LoadWAV("game resources/setbomb.wav");
@@ -35,7 +35,7 @@ public:
     player1(SDL_Renderer* renderer, string filepath, int x, int y, int framex, int framey);
     virtual ~player1();
 
-    void update1(float delta, const Uint8 *keyState, char status_map[][100], char bomb_map[][100], char power_map[][100]);
+    void update1(float delta, const Uint8 *keyState, char status_map[][100], char bomb_map[][100], char power_map[][100], SDL_Event keyboard);
     void draw1(SDL_Renderer* renderer);
     SDL_Rect position_rect1;
     float move_speed1;
