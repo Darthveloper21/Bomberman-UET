@@ -4,6 +4,7 @@
 #include <SDL_mixer.h>
 #include "player1.h"
 #include "player2.h"
+
 using namespace std;
 
 const int SCREEN_WIDTH = 1344;
@@ -52,7 +53,7 @@ int main(int argc, char* argv[])
 
     SDL_Texture* power_1 = IMG_LoadTexture(renderer, "game resources/power1.png");
     SDL_Texture* power_2 = IMG_LoadTexture(renderer, "game resources/power2.png");
-    //SDL_Texture* power_3 = IMG_LoadTexture(renderer, "game resources/power3.png");
+    SDL_Texture* power_3 = IMG_LoadTexture(renderer, "game resources/power3.png");
 
     // GUI
     SDL_Texture* newgame1 = IMG_LoadTexture(renderer, "game resources/newgame_frame.png");
@@ -92,7 +93,11 @@ int main(int argc, char* argv[])
             }
             if(keyState[SDL_SCANCODE_1])
                 if(!Mix_PlayingMusic()) Mix_PlayMusic(bgm, -1);
-            if(keyState[SDL_SCANCODE_2]) Mix_HaltMusic();
+            if(keyState[SDL_SCANCODE_2])
+            {
+                Mix_HaltChannel(-1);
+                Mix_HaltMusic();
+            }
 
 			x1 = player1.position_rect1.x;
 			y1 = player1.position_rect1.y;
@@ -107,7 +112,7 @@ int main(int argc, char* argv[])
             	{
                 	if(power_map[i][j] == '1') loadmyimage_but_des(power_1, renderer, j*64, i*64, 64, 64);
                 	if(power_map[i][j] == '2') loadmyimage_but_des(power_2, renderer, j*64, i*64, 64, 64);
-                	//if(power_map[i][j] == '3') loadmyimage_but_des(power_3, renderer, j*64, i*64, 64, 64);
+                	if(power_map[i][j] == '3') loadmyimage_but_des(power_3, renderer, j*64, i*64, 64, 64);
             	}
 
 			for(int i = 0; i < 14; ++i)
@@ -131,8 +136,8 @@ int main(int argc, char* argv[])
 			if(win_number == 1) {loadmyimage_but_des(player1_win, renderer, 1088, 0, 256, 256); running = false;}
 			else if(win_number == 2) {loadmyimage_but_des(player2_win, renderer, 1088, 0, 256, 256); running = false;}
 
-			player1.update1(delta_time, keyState, status_map, bomb_map, power_map);
-			player2.update2(delta_time, keyState, status_map, bomb_map, power_map);
+			player1.update1(delta_time, keyState, status_map, bomb_map, power_map, control);
+			player2.update2(delta_time, keyState, status_map, bomb_map, power_map, control);
 			player1.draw1(renderer);
 			player2.draw2(renderer);
 			SDL_RenderPresent(renderer);
@@ -255,9 +260,9 @@ void start()
     for(int i = 0; i < 14; ++i)
         for(int j = 0; j < 17; ++j)
         {
-            posibility = rand() % 100;
-            power_number = rand() % 2 + 1;
-            if(posibility < 15 && status_map[i][j] == '1') power_map[i][j] = power_number + '0';
+            posibility = rand() % 100 + 1;
+            power_number = rand() % 3 + 1;
+            if(posibility <= 21 && status_map[i][j] == '1') power_map[i][j] = power_number + '0';
         }
 }
 
@@ -293,7 +298,11 @@ bool newgame(SDL_Event mousemotion, SDL_Renderer* renderer, SDL_Texture* newgame
         }
         if(keyState[SDL_SCANCODE_1])
             if(!Mix_PlayingMusic()) Mix_PlayMusic(bgm, -1);
-        if(keyState[SDL_SCANCODE_2]) Mix_HaltMusic();
+        if(keyState[SDL_SCANCODE_2])
+        {
+            Mix_HaltChannel(-1);
+            Mix_HaltMusic();
+        }
 		else if(mousemotion.type == SDL_MOUSEMOTION)
 		{
 		    if(mousemotion.button.x > desx && mousemotion.button.x < (widthx+desx) && mousemotion.button.y > desy && mousemotion.button.y < (heighty+desy))
@@ -340,7 +349,11 @@ bool play_again(SDL_Event mousemotion, SDL_Renderer* renderer, SDL_Texture* play
         }
         if(keyState[SDL_SCANCODE_1])
             if(!Mix_PlayingMusic()) Mix_PlayMusic(bgm, -1);
-        if(keyState[SDL_SCANCODE_2]) Mix_HaltMusic();
+        if(keyState[SDL_SCANCODE_2])
+        {
+            Mix_HaltChannel(-1);
+            Mix_HaltMusic();
+        }
 		else if(mousemotion.type == SDL_MOUSEMOTION)
 		{
 		    if(mousemotion.button.x > desx && mousemotion.button.x < (widthx+desx) && mousemotion.button.y > desy && mousemotion.button.y < (heighty+desy))
