@@ -22,7 +22,7 @@ private:
     // bomb value
     int bombtime[10] = {0};
     int initbomb[10] = {0};
-    int waittime = 1300;
+    int waittime = 1400;
     bool explode[10] = {false};
     int bx[10] = {0}, by[10] = {0}, pocket = 1, press_cnt = 0;
 
