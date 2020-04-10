@@ -200,7 +200,7 @@ void player1::update1(float delta, const Uint8 *keyState, char status_map[][100]
     if(power_map[(position_rect1.y + 32) / 64][(position_rect1.x + 32) / 64] == '3')
     {
         Mix_PlayChannel(3, pop, 0);
-        waittime+=100;
+        waittime+=150;
         pocket++;
         power_map[(position_rect1.y + 32) / 64][(position_rect1.x + 32) / 64] = '0';
     }
