@@ -37,3 +37,8 @@ Update game play feature, sound effect.
 Now you can absorb bomb-pocket-power pill (Problem solved, YAY! 😄)
 
 Update explosion effect, fixing bugs, still it works ... bad, but better 😀, fx is no more muted when bombs explode.
+
+## Version 1.1.1
+    Box now stops fire from spreading around
+    Easier to control the characters.
+
