@@ -125,10 +125,30 @@ void player2::update2(float delta, const Uint8 *keyState, char status_map[][100]
         {
             Mix_PlayChannel(2, explosion, 0);
             if(status_map[bx[cnt]][by[cnt]] != '2') bomb_map[bx[cnt]][by[cnt]] = 'f';
-            for(int i = 0; i <= bomb_length2; ++i) {if(status_map[bx[cnt] + i][by[cnt]] != '2' && bx[cnt] + i < 14) bomb_map[bx[cnt] + i][by[cnt]] = 'f'; else break;}
-            for(int i = 0; i <= bomb_length2; ++i) {if(status_map[bx[cnt] - i][by[cnt]] != '2' && bx[cnt] - i > 0)  bomb_map[bx[cnt] - i][by[cnt]] = 'f'; else break;}
-            for(int i = 0; i <= bomb_length2; ++i) {if(status_map[bx[cnt]][by[cnt] + i] != '2' && by[cnt] + i < 17) bomb_map[bx[cnt]][by[cnt] + i] = 'f'; else break;}
-            for(int i = 0; i <= bomb_length2; ++i) {if(status_map[bx[cnt]][by[cnt] - i] != '2' && by[cnt] + i > 0)  bomb_map[bx[cnt]][by[cnt] - i] = 'f'; else break;}
+            for(int i = 0; i <= bomb_length2; ++i)
+            {
+                if(status_map[bx[cnt] + i][by[cnt]] == '0' && bx[cnt] + i < 14) bomb_map[bx[cnt] + i][by[cnt]] = 'f';
+                if(status_map[bx[cnt] + i][by[cnt]] == '1') {bomb_map[bx[cnt] + i][by[cnt]] = 'f'; break;}
+                if(status_map[bx[cnt] + i][by[cnt]] == '2') break;
+            }
+            for(int i = 0; i <= bomb_length2; ++i)
+            {
+                if(status_map[bx[cnt] - i][by[cnt]] == '0' && bx[cnt] - i > 0)  bomb_map[bx[cnt] - i][by[cnt]] = 'f';
+                if(status_map[bx[cnt] - i][by[cnt]] == '1') {bomb_map[bx[cnt] - i][by[cnt]] = 'f'; break;}
+                if(status_map[bx[cnt] - i][by[cnt]] == '2') break;
+            }
+            for(int i = 0; i <= bomb_length2; ++i)
+            {
+                if(status_map[bx[cnt]][by[cnt] + i] == '0' && by[cnt] + i < 17) bomb_map[bx[cnt]][by[cnt] + i] = 'f';
+                if(status_map[bx[cnt]][by[cnt] + i] == '1') {bomb_map[bx[cnt]][by[cnt] + i] = 'f'; break;}
+                if(status_map[bx[cnt]][by[cnt] + i] == '2') break;
+            }
+            for(int i = 0; i <= bomb_length2; ++i)
+            {
+                if(status_map[bx[cnt]][by[cnt] - i] == '0' && by[cnt] + i > 0)  bomb_map[bx[cnt]][by[cnt] - i] = 'f';
+                if(status_map[bx[cnt]][by[cnt] - i] == '1') {bomb_map[bx[cnt]][by[cnt] - i] = 'f'; break;}
+                if(status_map[bx[cnt]][by[cnt] - i] == '2') break;
+            }
 
             if(bombtime[cnt] - initbomb[cnt] >= waittime + 400)
             {
@@ -163,7 +183,7 @@ void player2::update2(float delta, const Uint8 *keyState, char status_map[][100]
     if(power_map[(position_rect2.y + 32) / 64][(position_rect2.x + 32) / 64] == '1')
     {
         Mix_PlayChannel(3, pop, 0);
-        waittime+=200;
+        waittime+=100;
         bomb_length2++;
         power_map[(position_rect2.y + 32) / 64][(position_rect2.x + 32) / 64] = '0';
     }
@@ -171,6 +191,7 @@ void player2::update2(float delta, const Uint8 *keyState, char status_map[][100]
     if(power_map[(position_rect2.y + 32) / 64][(position_rect2.x + 32) / 64] == '2')
     {
         Mix_PlayChannel(3, pop, 0);
+        waittime-=100;
         move_speed2+=2.5f;
         power_map[(position_rect2.y + 32) / 64][(position_rect2.x + 32) / 64] = '0';
     }
@@ -178,6 +199,7 @@ void player2::update2(float delta, const Uint8 *keyState, char status_map[][100]
     if(power_map[(position_rect2.y + 32) / 64][(position_rect2.x + 32) / 64] == '3')
     {
         Mix_PlayChannel(3, pop, 0);
+        waittime+=100;
         pocket++;
         power_map[(position_rect2.y + 32) / 64][(position_rect2.x + 32) / 64] = '0';
     }
