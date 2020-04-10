@@ -3,8 +3,8 @@ Another game coded by 19021268
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://spdx.org/licenses/MIT.html)  
 
-## Version
-This could be the last version.
+# Version 1.0.0
+This could be the last version. (not any more ^^)
 
 ## About game
 This is a two players game, the mission of each player is to defeat the other one by the one and only weapon in the game: bomb
