@@ -45,8 +45,9 @@ player1::~player1()
     SDL_DestroyTexture(texture);
 }
 
-void player1::update1(float delta, const Uint8 *keyState, char status_map[][100], char bomb_map[][100], char power_map[][100])
+void player1::update1(float delta, const Uint8 *keyState, char status_map[][100], char bomb_map[][100], char power_map[][100], SDL_Event keyboard)
 {
+    int cnt = 0;
     active = true;
     bombRect.w = 64;
     bombRect.h = 64;
@@ -100,62 +101,69 @@ void player1::update1(float delta, const Uint8 *keyState, char status_map[][100]
             active = false;
         }
 
-        if(keyState[keys[4]] && explode == false) // bomb
-        {
-            Mix_PlayChannel(-1, setbomb, 0);
-            if((position_rect1.x + frame_width) % 64 > 32) bombRect.x = position_rect1.x + frame_width;
-            else if((position_rect1.x + frame_width) % 64 <= 32) bombRect.x = position_rect1.x;
-            if((position_rect1.y + frame_height) % 64 > 32) bombRect.y = position_rect1.y + frame_height;
-            else if((position_rect1.y + frame_height) % 64 <= 32) bombRect.y = position_rect1.y;
+        if((position_rect1.x + frame_width) % 64 > 32) bombRect.x = position_rect1.x + frame_width;
+        else if((position_rect1.x + frame_width) % 64 <= 32) bombRect.x = position_rect1.x;
+        if((position_rect1.y + frame_height) % 64 > 32) bombRect.y = position_rect1.y + frame_height;
+        else if((position_rect1.y + frame_height) % 64 <= 32) bombRect.y = position_rect1.y;
 
-            bx = bombRect.y / 64; by = bombRect.x / 64;
-            bomb_map[bx][by] = '*';
-            initbomb = bombtime;
-            explode = true;
+        if(keyState[keys[4]] && explode[press_cnt] == false && press_cnt < pocket && keyboard.type == SDL_KEYDOWN && bomb_map[bombRect.y/64][bombRect.x/64] == '0') // bomb
+        {
+            Mix_PlayChannel(1, setbomb, 0);
+            bx[press_cnt] = bombRect.y / 64; by[press_cnt] = bombRect.x / 64;
+            bomb_map[bx[press_cnt]][by[press_cnt]] = '*';
+            initbomb[press_cnt] = bombtime[press_cnt];
+            explode[press_cnt] = true;
+            press_cnt++;
+            cout << press_cnt << endl;
         }
     }
-
     else active = false;
-    bombtime = SDL_GetTicks();
-    if(bombtime - initbomb >= waittime && explode == true)
-    {
-        Mix_PlayChannel(-1, explosion, 0);
-        if(status_map[bx][by] != '2') bomb_map[bx][by] = 'f';
-        for(int i = 0; i <= bomb_length1; ++i) {if(status_map[bx + i][by] != '2' && bx + i < 14) bomb_map[bx + i][by] = 'f'; else break;}
-        for(int i = 0; i <= bomb_length1; ++i) {if(status_map[bx - i][by] != '2' && bx - i > 0)  bomb_map[bx - i][by] = 'f'; else break;}
-        for(int i = 0; i <= bomb_length1; ++i) {if(status_map[bx][by + i] != '2' && by + i < 17) bomb_map[bx][by + i] = 'f'; else break;}
-        for(int i = 0; i <= bomb_length1; ++i) {if(status_map[bx][by - i] != '2' && by + i > 0)  bomb_map[bx][by - i] = 'f'; else break;}
 
-        if(bombtime - initbomb >= waittime + 400)
+    while(cnt < pocket)
+    {
+        bombtime[cnt] = SDL_GetTicks();
+        if(bombtime[cnt] - initbomb[cnt] >= waittime && explode[cnt] == true)
         {
-            if(status_map[bx][by] != '2') {bomb_map[bx][by] = '0'; status_map[bx][by] = '0';}
-            for(int i = 0; i <= bomb_length1; ++i)
+            Mix_PlayChannel(2, explosion, 0);
+            if(status_map[bx[cnt]][by[cnt]] != '2') bomb_map[bx[cnt]][by[cnt]] = 'f';
+            for(int i = 0; i <= bomb_length1; ++i) {if(status_map[bx[cnt] + i][by[cnt]] != '2' && bx[cnt] + i < 14) bomb_map[bx[cnt] + i][by[cnt]] = 'f'; else break;}
+            for(int i = 0; i <= bomb_length1; ++i) {if(status_map[bx[cnt] - i][by[cnt]] != '2' && bx[cnt] - i > 0)  bomb_map[bx[cnt] - i][by[cnt]] = 'f'; else break;}
+            for(int i = 0; i <= bomb_length1; ++i) {if(status_map[bx[cnt]][by[cnt] + i] != '2' && by[cnt] + i < 17) bomb_map[bx[cnt]][by[cnt] + i] = 'f'; else break;}
+            for(int i = 0; i <= bomb_length1; ++i) {if(status_map[bx[cnt]][by[cnt] - i] != '2' && by[cnt] + i > 0)  bomb_map[bx[cnt]][by[cnt] - i] = 'f'; else break;}
+
+            if(bombtime[cnt] - initbomb[cnt] >= waittime + 400)
             {
-                if(status_map[bx + i][by] != '2' && bx + i < 14) {bomb_map[bx + i][by] = '0'; status_map[bx + i][by] = '0';}
-                else break;
+                if(status_map[bx[cnt]][by[cnt]] != '2') {bomb_map[bx[cnt]][by[cnt]] = '0'; status_map[bx[cnt]][by[cnt]] = '0';}
+                for(int i = 0; i <= bomb_length1; ++i)
+                {
+                    if(status_map[bx[cnt] + i][by[cnt]] != '2' && bx[cnt] + i < 14) {bomb_map[bx[cnt] + i][by[cnt]] = '0'; status_map[bx[cnt] + i][by[cnt]] = '0';}
+                    else break;
+                }
+                for(int i = 0; i <= bomb_length1; ++i)
+                {
+                    if(status_map[bx[cnt] - i][by[cnt]] != '2' && bx[cnt] - i > 0) {bomb_map[bx[cnt] - i][by[cnt]] = '0'; status_map[bx[cnt] - i][by[cnt]] = '0';}
+                    else break;
+                }
+                for(int i = 0; i <= bomb_length1; ++i)
+                {
+                    if(status_map[bx[cnt]][by[cnt] + i] != '2' && by[cnt] + i < 17) {bomb_map[bx[cnt]][by[cnt] + i] = '0'; status_map[bx[cnt]][by[cnt] + i] = '0';}
+                    else break;
+                }
+                for(int i = 0; i <= bomb_length1; ++i)
+                {
+                    if(status_map[bx[cnt]][by[cnt] - i] != '2' && by[cnt] - i > 0) {bomb_map[bx[cnt]][by[cnt] - i] = '0'; status_map[bx[cnt]][by[cnt] - i] = '0';}
+                    else break;
+                }
+                explode[cnt] = false;
+                press_cnt--;
             }
-            for(int i = 0; i <= bomb_length1; ++i)
-            {
-                if(status_map[bx - i][by] != '2' && bx - i > 0) {bomb_map[bx - i][by] = '0'; status_map[bx - i][by] = '0';}
-                else break;
-            }
-            for(int i = 0; i <= bomb_length1; ++i)
-            {
-                if(status_map[bx][by + i] != '2' && by + i < 17) {bomb_map[bx][by + i] = '0'; status_map[bx][by + i] = '0';}
-                else break;
-            }
-            for(int i = 0; i <= bomb_length1; ++i)
-            {
-                if(status_map[bx][by - i] != '2' && by - i > 0) {bomb_map[bx][by - i] = '0'; status_map[bx][by - i] = '0';}
-                else break;
-            }
-            explode = false;
         }
+        cnt++;
     }
 
     if(power_map[(position_rect1.y + 32) / 64][(position_rect1.x + 32) / 64] == '1')
     {
-        Mix_PlayChannel(-1, pop, 0);
+        Mix_PlayChannel(3, pop, 0);
         bomb_length1++;
         waittime+=200;
         power_map[(position_rect1.y + 32) / 64][(position_rect1.x + 32) / 64] = '0';
@@ -163,8 +171,15 @@ void player1::update1(float delta, const Uint8 *keyState, char status_map[][100]
 
     if(power_map[(position_rect1.y + 32) / 64][(position_rect1.x + 32) / 64] == '2')
     {
-        Mix_PlayChannel(-1, pop, 0);
+        Mix_PlayChannel(3, pop, 0);
         move_speed1+=2.5f;
+        power_map[(position_rect1.y + 32) / 64][(position_rect1.x + 32) / 64] = '0';
+    }
+
+    if(power_map[(position_rect1.y + 32) / 64][(position_rect1.x + 32) / 64] == '3')
+    {
+        Mix_PlayChannel(3, pop, 0);
+        pocket++;
         power_map[(position_rect1.y + 32) / 64][(position_rect1.x + 32) / 64] = '0';
     }
 
