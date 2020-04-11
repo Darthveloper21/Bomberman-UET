@@ -43,6 +43,7 @@ int main(int argc, char* argv[])
     const Uint8 *keyState;
     keyState = SDL_GetKeyboardState(NULL);
 
+    // Graphics
     SDL_Texture* background = IMG_LoadTexture(renderer, "game resources/grass_ground.png");
     SDL_Texture* brick = IMG_LoadTexture(renderer, "game resources/white_brick.png");
     SDL_Texture* box = IMG_LoadTexture(renderer, "game resources/box.png");
@@ -54,6 +55,8 @@ int main(int argc, char* argv[])
     SDL_Texture* power_1 = IMG_LoadTexture(renderer, "game resources/power1.png");
     SDL_Texture* power_2 = IMG_LoadTexture(renderer, "game resources/power2.png");
     SDL_Texture* power_3 = IMG_LoadTexture(renderer, "game resources/power3.png");
+    SDL_Texture* character1 = IMG_LoadTexture(renderer, "game resources/red-dude.png");
+    SDL_Texture* character2 = IMG_LoadTexture(renderer, "game resources/yellow-dude.png");
 
     // GUI
     SDL_Texture* newgame1 = IMG_LoadTexture(renderer, "game resources/newgame_frame.png");
@@ -66,8 +69,8 @@ int main(int argc, char* argv[])
         SDL_RenderClear(renderer);
 		if(newgame(control, renderer, newgame1, newgame2, 472, 400, 400, 125, window) == false) {main_logic = false; running = false;}
 		start();
-		player1 player1(renderer, "game resources/red-dude.png", 64, 64, 3, 4);
-        player2 player2(renderer, "game resources/yellow-dude.png", 972, 788, 3, 4);
+		player1 player1(renderer, character1, 64, 64, 3, 4);
+        player2 player2(renderer, character2, 972, 788, 3, 4);
 
 		int x1, y1, x2, y2;
         int prev_time = 0;
@@ -138,13 +141,12 @@ int main(int argc, char* argv[])
 
 			player1.update1(delta_time, keyState, status_map, bomb_map, power_map, control);
 			player2.update2(delta_time, keyState, status_map, bomb_map, power_map, control);
-			player1.draw1(renderer);
-			player2.draw2(renderer);
+			player1.draw1(renderer, character1);
+			player2.draw2(renderer, character2);
 			SDL_RenderPresent(renderer);
     	}
 
     	if(win_number == 0) break;
-
     	if(play_again(control, renderer, play_again1, play_again2, 1098, 796, 236, 50, window) == true)
         {
             running = true;
@@ -152,15 +154,6 @@ int main(int argc, char* argv[])
             continue;
         }
     	else {main_logic = false; running = false;}
-    }
-
-    //if(win_number != 0) quit_check(window, renderer);
-
-    for(int i = 0; i < 14; ++i)
-    {
-        for(int j = 0; j < 17; ++j)
-            cout << status_map[i][j];
-        cout << endl;
     }
 
     quitSDL(window, renderer);
@@ -171,10 +164,13 @@ int main(int argc, char* argv[])
     SDL_DestroyTexture(fire);
     SDL_DestroyTexture(power_1);
     SDL_DestroyTexture(power_2);
+    SDL_DestroyTexture(power_3);
     SDL_DestroyTexture(player1_win);
     SDL_DestroyTexture(player2_win);
     SDL_DestroyTexture(newgame1);
     SDL_DestroyTexture(newgame2);
+    SDL_DestroyTexture(character1);
+    SDL_DestroyTexture(character2);
     Mix_FreeMusic(bgm);
 
     return 0;
