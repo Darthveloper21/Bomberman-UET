@@ -20,13 +20,6 @@ Sound effect works a bit ... badly.
 
 You can press the esc key at any time to exit the game.
 
-Copy all .dll files (not the folder) and game resources folder to the same project folder with source code.
-
-.rar file contains exe file, it runs the game without source code.
-
-If exe screen is too big that bigger than the device screen you can try to change high DPI settings by right click at the .exe file,
-choose properties -> Change high DPI settings -> override high DPI scaling behavior -> application.
-
 ### Hope you enjoy my project 🤍
 I do trying to add bomb-pocket-power pill (player can set more than just one bomb at the same time), but a lot of issues appear and my coding skills have limitation :(((.
 
