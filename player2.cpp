@@ -1,4 +1,4 @@
-#include "player2.h"
+#include "player1.h"
 #include <bits/stdc++.h>
 #include <SDL.h>
 #include <SDL_image.h>
@@ -9,16 +9,11 @@ using namespace std;
 const int SCREEN_WIDTH = 1344;
 const int SCREEN_HEIGHT = 896;
 
-player2::player2(SDL_Renderer* renderer, string filepath, int x, int y, int framex, int framey)
+player1::player1(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, int framex, int framey)
 {
-    SDL_Surface *surface = IMG_Load(filepath.c_str());
-    texture = SDL_CreateTextureFromSurface(renderer, surface);
-    if(texture == NULL) cout << "error";
-    SDL_FreeSurface(surface);
-
     SDL_QueryTexture(texture, NULL, NULL, &cropRect.w, &cropRect.h);
-    position_rect2.x = x;
-    position_rect2.y = y;
+    position_rect1.x = x;
+    position_rect1.y = y;
     cropRect.y = 0;
 
     texture_width = cropRect.w;
@@ -26,26 +21,26 @@ player2::player2(SDL_Renderer* renderer, string filepath, int x, int y, int fram
     cropRect.w /= framex;
     cropRect.h /= framey;
 
-    frame_width = position_rect2.w = cropRect.w;
-    frame_height = position_rect2.h = cropRect.h;
+    frame_width = position_rect1.w = cropRect.w;
+    frame_height = position_rect1.h = cropRect.h;
 
     active = false;
 
-    keys[0] = SDL_SCANCODE_UP;
-    keys[1] = SDL_SCANCODE_DOWN;
-    keys[2] = SDL_SCANCODE_LEFT;
-    keys[3] = SDL_SCANCODE_RIGHT;
-    keys[4] = SDL_SCANCODE_P;
+    keys[0] = SDL_SCANCODE_W;
+    keys[1] = SDL_SCANCODE_S;
+    keys[2] = SDL_SCANCODE_A;
+    keys[3] = SDL_SCANCODE_D;
+    keys[4] = SDL_SCANCODE_SPACE;
 
-    move_speed2 = 55.0f;
+    move_speed1 = 55.0f;
 }
 
-player2::~player2()
+player1::~player1()
 {
-    SDL_DestroyTexture(texture);
+    //SDL_DestroyTexture(texture);
 }
 
-void player2::update2(float delta, const Uint8 *keyState, char status_map[][100], char bomb_map[][100], char power_map[][100], SDL_Event keyboard)
+void player1::update1(float delta, const Uint8 *keyState, char status_map[][100], char bomb_map[][100], char power_map[][100], SDL_Event keyboard)
 {
     int cnt = 0;
     active = true;
@@ -54,46 +49,46 @@ void player2::update2(float delta, const Uint8 *keyState, char status_map[][100]
 
     for(int i = 0; i < 14; ++i)
         for(int j = 0; j < 17; ++j)
-            if(bomb_map[i][j] == 'b')
+            if(bomb_map[i][j] == '*')
             {
-                if(bomb_map[position_rect2.y / 64][position_rect2.x / 64] != bomb_map[i][j] && bomb_map[(position_rect2.y + frame_height) / 64][(position_rect2.x + frame_width) / 64] != bomb_map[i][j]
-                && bomb_map[position_rect2.y / 64][(position_rect2.x + frame_width) / 64] != bomb_map[i][j] && bomb_map[(position_rect2.y + frame_height) / 64][position_rect2.x / 64] != bomb_map[i][j])
+                if(bomb_map[position_rect1.y / 64][position_rect1.x / 64] != bomb_map[i][j] && bomb_map[(position_rect1.y + frame_width) / 64][(position_rect1.x + frame_height) / 64] != bomb_map[i][j]
+                && bomb_map[position_rect1.y / 64][(position_rect1.x + frame_width) / 64] != bomb_map[i][j] && bomb_map[(position_rect1.y + frame_height) / 64][position_rect1.x / 64] != bomb_map[i][j])
                     status_map[i][j] = '3';
             }
 
-    if(status_map[position_rect2.y / 64][position_rect2.x / 64] == '0' && status_map[(position_rect2.y + frame_height) / 64][(position_rect2.x + frame_width) / 64] == '0'
-    && status_map[(position_rect2.y + frame_height) / 64][position_rect2.x / 64] == '0' && status_map[position_rect2.y / 64][(position_rect2.x + frame_width) / 64] == '0')
+    if(status_map[position_rect1.y / 64][position_rect1.x / 64] == '0' && status_map[(position_rect1.y + frame_height) / 64][(position_rect1.x + frame_width) / 64] == '0'
+    && status_map[(position_rect1.y + frame_height) / 64][position_rect1.x / 64] == '0' && status_map[position_rect1.y / 64][(position_rect1.x + frame_width) / 64] == '0')
     {
         if(keyState[keys[0]]) // up
         {
-            position_rect2.y -= move_speed2 * delta;
-            if(status_map[position_rect2.y / 64][position_rect2.x / 64] != '0' or
-               status_map[position_rect2.y / 64][(position_rect2.x + frame_width) / 64] != '0')
-                position_rect2.y = (position_rect2.y/64 + 1) * 64 + 1;
+            position_rect1.y -= move_speed1 * delta;
+            if(status_map[position_rect1.y / 64][position_rect1.x / 64] != '0' or
+               status_map[position_rect1.y / 64][(position_rect1.x + frame_width) / 64] != '0')
+                position_rect1.y = (position_rect1.y/64 + 1) * 64 + 1;
             cropRect.y = frame_height;
         }
         else if(keyState[keys[1]]) // down
         {
-            position_rect2.y += move_speed2 * delta + 1;
-            if(status_map[(position_rect2.y + frame_height) / 64][position_rect2.x / 64] != '0' or
-               status_map[(position_rect2.y + frame_height) / 64][(position_rect2.x + frame_width) / 64] != '0')
-                position_rect2.y = ((position_rect2.y + frame_height) / 64 - 1) * 64 + 63 - frame_height;
+            position_rect1.y += move_speed1 * delta + 1;
+            if(status_map[(position_rect1.y + frame_height) / 64][position_rect1.x / 64] != '0' or
+               status_map[(position_rect1.y + frame_height) / 64][(position_rect1.x + frame_width) / 64] != '0')
+                position_rect1.y = ((position_rect1.y + frame_height) / 64 - 1) * 64 + 63 - frame_height;
             cropRect.y = 0;
         }
         if(keyState[keys[2]]) // left
         {
-            position_rect2.x -= move_speed2 * delta;
-            if(status_map[position_rect2.y / 64][position_rect2.x / 64] != '0' or
-               status_map[(position_rect2.y + frame_height) / 64][position_rect2.x / 64] != '0')
-                position_rect2.x = (position_rect2.x / 64 + 1) * 64 + 1;
+            position_rect1.x -= move_speed1 * delta;
+            if(status_map[position_rect1.y / 64][position_rect1.x / 64] != '0' or
+               status_map[(position_rect1.y + frame_height) / 64][position_rect1.x / 64] != '0')
+                position_rect1.x = (position_rect1.x / 64 + 1) * 64 + 1;
             cropRect.y = frame_height * 2;
         }
         else if(keyState[keys[3]]) // right
         {
-            position_rect2.x += move_speed2 * delta + 1;
-            if(status_map[position_rect2.y / 64][(position_rect2.x + frame_width) / 64] != '0' or
-               status_map[(position_rect2.y + frame_height) / 64][(position_rect2.x + frame_width) / 64] != '0')
-                position_rect2.x = ((position_rect2.x + frame_width) / 64 - 1) * 64 + 63 - frame_width;
+            position_rect1.x += move_speed1 * delta + 1;
+            if(status_map[position_rect1.y / 64][(position_rect1.x + frame_width) / 64] != '0' or
+               status_map[(position_rect1.y + frame_height) / 64][(position_rect1.x + frame_width) / 64] != '0')
+                position_rect1.x = ((position_rect1.x + frame_width) / 64 - 1) * 64 + 63 - frame_width;
             cropRect.y = frame_height * 3;
         }
         else if(!keyState[keys[0]] && !keyState[keys[1]] && !keyState[keys[2]] && !keyState[keys[3]])
@@ -101,16 +96,16 @@ void player2::update2(float delta, const Uint8 *keyState, char status_map[][100]
             active = false;
         }
 
-        if((position_rect2.x + frame_width) % 64 > 32) bombRect.x = position_rect2.x + frame_width;
-        else if((position_rect2.x + frame_width) % 64 <= 32) bombRect.x = position_rect2.x;
-        if((position_rect2.y + frame_height) % 64 > 32) bombRect.y = position_rect2.y + frame_height;
-        else if((position_rect2.y + frame_height) % 64 <= 32) bombRect.y = position_rect2.y;
+        if((position_rect1.x + frame_width) % 64 > 32) bombRect.x = position_rect1.x + frame_width;
+        else if((position_rect1.x + frame_width) % 64 <= 32) bombRect.x = position_rect1.x;
+        if((position_rect1.y + frame_height) % 64 > 32) bombRect.y = position_rect1.y + frame_height;
+        else if((position_rect1.y + frame_height) % 64 <= 32) bombRect.y = position_rect1.y;
 
         if(keyState[keys[4]] && explode[press_cnt] == false && press_cnt < pocket && keyboard.type == SDL_KEYDOWN && bomb_map[bombRect.y/64][bombRect.x/64] == '0') // bomb
         {
-            Mix_PlayChannel(4, setbomb, 0);
+            Mix_PlayChannel(1, setbomb, 0);
             bx[press_cnt] = bombRect.y / 64; by[press_cnt] = bombRect.x / 64;
-            bomb_map[bx[press_cnt]][by[press_cnt]] = 'b';
+            bomb_map[bx[press_cnt]][by[press_cnt]] = '*';
             initbomb[press_cnt] = bombtime[press_cnt];
             explode[press_cnt] = true;
             press_cnt++;
@@ -123,27 +118,27 @@ void player2::update2(float delta, const Uint8 *keyState, char status_map[][100]
         bombtime[cnt] = SDL_GetTicks();
         if(bombtime[cnt] - initbomb[cnt] >= waittime && explode[cnt] == true)
         {
-            Mix_PlayChannel(5, explosion, 0);
+            Mix_PlayChannel(2, explosion, 0);
             if(status_map[bx[cnt]][by[cnt]] != '2') bomb_map[bx[cnt]][by[cnt]] = 'f';
-            for(int i = 0; i <= bomb_length2; ++i)
+            for(int i = 0; i <= bomb_length1; ++i)
             {
                 if(status_map[bx[cnt] + i][by[cnt]] == '0' && bx[cnt] + i < 14) bomb_map[bx[cnt] + i][by[cnt]] = 'f';
                 if(status_map[bx[cnt] + i][by[cnt]] == '1') {bomb_map[bx[cnt] + i][by[cnt]] = 'f'; break;}
                 if(status_map[bx[cnt] + i][by[cnt]] == '2') break;
             }
-            for(int i = 0; i <= bomb_length2; ++i)
+            for(int i = 0; i <= bomb_length1; ++i)
             {
                 if(status_map[bx[cnt] - i][by[cnt]] == '0' && bx[cnt] - i > 0)  bomb_map[bx[cnt] - i][by[cnt]] = 'f';
                 if(status_map[bx[cnt] - i][by[cnt]] == '1') {bomb_map[bx[cnt] - i][by[cnt]] = 'f'; break;}
                 if(status_map[bx[cnt] - i][by[cnt]] == '2') break;
             }
-            for(int i = 0; i <= bomb_length2; ++i)
+            for(int i = 0; i <= bomb_length1; ++i)
             {
                 if(status_map[bx[cnt]][by[cnt] + i] == '0' && by[cnt] + i < 17) bomb_map[bx[cnt]][by[cnt] + i] = 'f';
                 if(status_map[bx[cnt]][by[cnt] + i] == '1') {bomb_map[bx[cnt]][by[cnt] + i] = 'f'; break;}
                 if(status_map[bx[cnt]][by[cnt] + i] == '2') break;
             }
-            for(int i = 0; i <= bomb_length2; ++i)
+            for(int i = 0; i <= bomb_length1; ++i)
             {
                 if(status_map[bx[cnt]][by[cnt] - i] == '0' && by[cnt] + i > 0)  bomb_map[bx[cnt]][by[cnt] - i] = 'f';
                 if(status_map[bx[cnt]][by[cnt] - i] == '1') {bomb_map[bx[cnt]][by[cnt] - i] = 'f'; break;}
@@ -153,25 +148,25 @@ void player2::update2(float delta, const Uint8 *keyState, char status_map[][100]
             if(bombtime[cnt] - initbomb[cnt] >= waittime + 400)
             {
                 if(status_map[bx[cnt]][by[cnt]] != '2') {bomb_map[bx[cnt]][by[cnt]] = '0'; status_map[bx[cnt]][by[cnt]] = '0';}
-                for(int i = 0; i <= bomb_length2; ++i)
+                for(int i = 0; i <= bomb_length1; ++i)
                 {
                     if(status_map[bx[cnt] + i][by[cnt]] == '0' && bx[cnt] + i < 14) {bomb_map[bx[cnt] + i][by[cnt]] = '0'; status_map[bx[cnt] + i][by[cnt]] = '0';}
                     if(status_map[bx[cnt] + i][by[cnt]] == '1') {bomb_map[bx[cnt] + i][by[cnt]] = '0'; status_map[bx[cnt] + i][by[cnt]] = '0'; break;}
                     if(status_map[bx[cnt] + i][by[cnt]] == '2') break;
                 }
-                for(int i = 0; i <= bomb_length2; ++i)
+                for(int i = 0; i <= bomb_length1; ++i)
                 {
                     if(status_map[bx[cnt] - i][by[cnt]] == '0' && bx[cnt] - i > 0)  {bomb_map[bx[cnt] - i][by[cnt]] = '0'; status_map[bx[cnt] - i][by[cnt]] = '0';}
                     if(status_map[bx[cnt] - i][by[cnt]] == '1') {bomb_map[bx[cnt] - i][by[cnt]] = '0'; status_map[bx[cnt] - i][by[cnt]] = '0'; break;}
                     if(status_map[bx[cnt] - i][by[cnt]] == '2') break;
                 }
-                for(int i = 0; i <= bomb_length2; ++i)
+                for(int i = 0; i <= bomb_length1; ++i)
                 {
                     if(status_map[bx[cnt]][by[cnt] + i] == '0' && by[cnt] + i < 17) {bomb_map[bx[cnt]][by[cnt] + i] = '0'; status_map[bx[cnt]][by[cnt] + i] = '0';}
                     if(status_map[bx[cnt]][by[cnt] + i] == '1') {bomb_map[bx[cnt]][by[cnt] + i] = '0'; status_map[bx[cnt]][by[cnt] + i] = '0'; break;}
                     if(status_map[bx[cnt]][by[cnt] + i] == '2') break;
                 }
-                for(int i = 0; i <= bomb_length2; ++i)
+                for(int i = 0; i <= bomb_length1; ++i)
                 {
                     if(status_map[bx[cnt]][by[cnt] - i] == '0' && by[cnt] + i > 0)  {bomb_map[bx[cnt]][by[cnt] - i] = '0'; status_map[bx[cnt]][by[cnt] - i] = '0';}
                     if(status_map[bx[cnt]][by[cnt] - i] == '1') {bomb_map[bx[cnt]][by[cnt] - i] = '0'; status_map[bx[cnt]][by[cnt] - i] = '0'; break;}
@@ -184,28 +179,28 @@ void player2::update2(float delta, const Uint8 *keyState, char status_map[][100]
         cnt++;
     }
 
-    if(power_map[(position_rect2.y + 32) / 64][(position_rect2.x + 32) / 64] == '1')
+    if(power_map[(position_rect1.y + 32) / 64][(position_rect1.x + 32) / 64] == '1')
     {
-        Mix_PlayChannel(6, pop, 0);
+        Mix_PlayChannel(3, pop, 0);
+        bomb_length1++;
         waittime+=100;
-        bomb_length2++;
-        power_map[(position_rect2.y + 32) / 64][(position_rect2.x + 32) / 64] = '0';
+        power_map[(position_rect1.y + 32) / 64][(position_rect1.x + 32) / 64] = '0';
     }
 
-    if(power_map[(position_rect2.y + 32) / 64][(position_rect2.x + 32) / 64] == '2')
+    if(power_map[(position_rect1.y + 32) / 64][(position_rect1.x + 32) / 64] == '2')
     {
-        Mix_PlayChannel(6, pop, 0);
+        Mix_PlayChannel(3, pop, 0);
         waittime-=100;
-        move_speed2+=2.5f;
-        power_map[(position_rect2.y + 32) / 64][(position_rect2.x + 32) / 64] = '0';
+        move_speed1+=2.5f;
+        power_map[(position_rect1.y + 32) / 64][(position_rect1.x + 32) / 64] = '0';
     }
 
-    if(power_map[(position_rect2.y + 32) / 64][(position_rect2.x + 32) / 64] == '3')
+    if(power_map[(position_rect1.y + 32) / 64][(position_rect1.x + 32) / 64] == '3')
     {
-        Mix_PlayChannel(6, pop, 0);
+        Mix_PlayChannel(3, pop, 0);
         waittime+=150;
         pocket++;
-        power_map[(position_rect2.y + 32) / 64][(position_rect2.x + 32) / 64] = '0';
+        power_map[(position_rect1.y + 32) / 64][(position_rect1.x + 32) / 64] = '0';
     }
 
     if(active)
@@ -226,7 +221,7 @@ void player2::update2(float delta, const Uint8 *keyState, char status_map[][100]
     }
 }
 
-void player2::draw2(SDL_Renderer* renderer)
+void player1::draw1(SDL_Renderer* renderer, SDL_Texture* texture)
 {
-    SDL_RenderCopy(renderer, texture, &cropRect, &position_rect2);
+    SDL_RenderCopy(renderer, texture, &cropRect, &position_rect1);
 }
