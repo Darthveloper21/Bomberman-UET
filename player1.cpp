@@ -9,13 +9,8 @@ using namespace std;
 const int SCREEN_WIDTH = 1344;
 const int SCREEN_HEIGHT = 896;
 
-player1::player1(SDL_Renderer* renderer, string filepath, int x, int y, int framex, int framey)
+player1::player1(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, int framex, int framey)
 {
-    SDL_Surface *surface = IMG_Load(filepath.c_str());
-    texture = SDL_CreateTextureFromSurface(renderer, surface);
-    if(texture == NULL) cout << "error";
-    SDL_FreeSurface(surface);
-
     SDL_QueryTexture(texture, NULL, NULL, &cropRect.w, &cropRect.h);
     position_rect1.x = x;
     position_rect1.y = y;
@@ -42,7 +37,7 @@ player1::player1(SDL_Renderer* renderer, string filepath, int x, int y, int fram
 
 player1::~player1()
 {
-    SDL_DestroyTexture(texture);
+    //SDL_DestroyTexture(texture);
 }
 
 void player1::update1(float delta, const Uint8 *keyState, char status_map[][100], char bomb_map[][100], char power_map[][100], SDL_Event keyboard)
@@ -226,7 +221,7 @@ void player1::update1(float delta, const Uint8 *keyState, char status_map[][100]
     }
 }
 
-void player1::draw1(SDL_Renderer* renderer)
+void player1::draw1(SDL_Renderer* renderer, SDL_Texture* texture)
 {
     SDL_RenderCopy(renderer, texture, &cropRect, &position_rect1);
 }
