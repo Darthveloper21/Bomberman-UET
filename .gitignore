@@ -1,0 +1,8 @@
+/bin
+/obj
+/Debug
+/.vs
+*.dll
+*.o
+*.obj
+*.exe
