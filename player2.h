@@ -19,11 +19,11 @@ private:
     SDL_Scancode keys[6];
 
     // bomb value
-    int bombtime[10] = {0};
-    int initbomb[10] = {0};
+    int bombtime[100] = {0};
+    int initbomb[100] = {0};
     int waittime = 1500;
-    bool explode[10] = {false};
-    int bx[10] = {0}, by[10] = {0}, pocket = 1, press_cnt = 0;
+    bool explode[100] = {false};
+    int bx[100] = {0}, by[100] = {0}, pocket = 1, press_cnt = 0;
 
     //sound
     Mix_Chunk* setbomb = Mix_LoadWAV("game resources/setbomb.wav");
