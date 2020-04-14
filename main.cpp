@@ -258,7 +258,7 @@ void start()
         {
             posibility = rand() % 100 + 1;
             power_number = rand() % 3 + 1;
-            if(posibility <= 21 && status_map[i][j] == '1') power_map[i][j] = power_number + '0';
+            if(posibility <= 33 && status_map[i][j] == '1') power_map[i][j] = power_number + '0';
         }
 }
 
