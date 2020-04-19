@@ -51,8 +51,10 @@ void player2::update2(float delta, const Uint8 *keyState, char status_map[][100]
         for(int j = 0; j < 17; ++j)
             if(bomb_map[i][j] == 'b')
             {
-                if(bomb_map[position_rect2.y / 64][position_rect2.x / 64] != bomb_map[i][j] && bomb_map[(position_rect2.y + frame_height) / 64][(position_rect2.x + frame_width) / 64] != bomb_map[i][j]
-                && bomb_map[position_rect2.y / 64][(position_rect2.x + frame_width) / 64] != bomb_map[i][j] && bomb_map[(position_rect2.y + frame_height) / 64][position_rect2.x / 64] != bomb_map[i][j])
+                if(bomb_map[position_rect2.y / 64][position_rect2.x / 64] != bomb_map[i][j] &&
+                   bomb_map[(position_rect2.y + frame_height) / 64][(position_rect2.x + frame_width) / 64] != bomb_map[i][j] &&
+                   bomb_map[position_rect2.y / 64][(position_rect2.x + frame_width) / 64] != bomb_map[i][j] &&
+                   bomb_map[(position_rect2.y + frame_height) / 64][position_rect2.x / 64] != bomb_map[i][j])
                     status_map[i][j] = '3';
             }
 

@@ -47,17 +47,19 @@ void player1::update1(float delta, const Uint8 *keyState, char status_map[][100]
     bombRect.w = 64;
     bombRect.h = 64;
 
-    for(int i = 0; i < 14; ++i)
+    for(int i = 0; i < 14; ++i) // bomb collision after player move away from it
         for(int j = 0; j < 17; ++j)
             if(bomb_map[i][j] == '*')
             {
-                if(bomb_map[position_rect1.y / 64][position_rect1.x / 64] != bomb_map[i][j] && bomb_map[(position_rect1.y + frame_width) / 64][(position_rect1.x + frame_height) / 64] != bomb_map[i][j]
-                && bomb_map[position_rect1.y / 64][(position_rect1.x + frame_width) / 64] != bomb_map[i][j] && bomb_map[(position_rect1.y + frame_height) / 64][position_rect1.x / 64] != bomb_map[i][j])
+                if(bomb_map[position_rect1.y / 64][position_rect1.x / 64] != bomb_map[i][j] &&
+                   bomb_map[(position_rect1.y + frame_width) / 64][(position_rect1.x + frame_height) / 64] != bomb_map[i][j] &&
+                   bomb_map[position_rect1.y / 64][(position_rect1.x + frame_width) / 64] != bomb_map[i][j] &&
+                   bomb_map[(position_rect1.y + frame_height) / 64][position_rect1.x / 64] != bomb_map[i][j])
                     status_map[i][j] = '3';
             }
 
     if(status_map[position_rect1.y / 64][position_rect1.x / 64] == '0' && status_map[(position_rect1.y + frame_height) / 64][(position_rect1.x + frame_width) / 64] == '0'
-    && status_map[(position_rect1.y + frame_height) / 64][position_rect1.x / 64] == '0' && status_map[position_rect1.y / 64][(position_rect1.x + frame_width) / 64] == '0')
+    && status_map[(position_rect1.y + frame_height) / 64][position_rect1.x / 64] == '0' && status_map[position_rect1.y / 64][(position_rect1.x + frame_width) / 64] == '0') // collision
     {
         if(keyState[keys[0]]) // up
         {
@@ -116,7 +118,7 @@ void player1::update1(float delta, const Uint8 *keyState, char status_map[][100]
     while(cnt < pocket)
     {
         bombtime[cnt] = SDL_GetTicks();
-        if(bombtime[cnt] - initbomb[cnt] >= waittime && explode[cnt] == true)
+        if(bombtime[cnt] - initbomb[cnt] >= waittime && explode[cnt] == true) // exploded for 0.4 sec
         {
             Mix_PlayChannel(2, explosion, 0);
             if(status_map[bx[cnt]][by[cnt]] != '2') bomb_map[bx[cnt]][by[cnt]] = 'f';
@@ -145,29 +147,29 @@ void player1::update1(float delta, const Uint8 *keyState, char status_map[][100]
                 if(status_map[bx[cnt]][by[cnt] - i] == '2') break;
             }
 
-            if(bombtime[cnt] - initbomb[cnt] >= waittime + 400)
+            if(bombtime[cnt] - initbomb[cnt] >= waittime + 400) // finish explode
             {
                 if(status_map[bx[cnt]][by[cnt]] != '2') {bomb_map[bx[cnt]][by[cnt]] = '0'; status_map[bx[cnt]][by[cnt]] = '0';}
                 for(int i = 0; i <= bomb_length1; ++i)
-                {
+                { //down
                     if(status_map[bx[cnt] + i][by[cnt]] == '0' && bx[cnt] + i < 14) {bomb_map[bx[cnt] + i][by[cnt]] = '0'; status_map[bx[cnt] + i][by[cnt]] = '0';}
                     if(status_map[bx[cnt] + i][by[cnt]] == '1') {bomb_map[bx[cnt] + i][by[cnt]] = '0'; status_map[bx[cnt] + i][by[cnt]] = '0'; break;}
                     if(status_map[bx[cnt] + i][by[cnt]] == '2') break;
                 }
                 for(int i = 0; i <= bomb_length1; ++i)
-                {
+                { //up
                     if(status_map[bx[cnt] - i][by[cnt]] == '0' && bx[cnt] - i > 0)  {bomb_map[bx[cnt] - i][by[cnt]] = '0'; status_map[bx[cnt] - i][by[cnt]] = '0';}
                     if(status_map[bx[cnt] - i][by[cnt]] == '1') {bomb_map[bx[cnt] - i][by[cnt]] = '0'; status_map[bx[cnt] - i][by[cnt]] = '0'; break;}
                     if(status_map[bx[cnt] - i][by[cnt]] == '2') break;
                 }
                 for(int i = 0; i <= bomb_length1; ++i)
-                {
+                { //right
                     if(status_map[bx[cnt]][by[cnt] + i] == '0' && by[cnt] + i < 17) {bomb_map[bx[cnt]][by[cnt] + i] = '0'; status_map[bx[cnt]][by[cnt] + i] = '0';}
                     if(status_map[bx[cnt]][by[cnt] + i] == '1') {bomb_map[bx[cnt]][by[cnt] + i] = '0'; status_map[bx[cnt]][by[cnt] + i] = '0'; break;}
                     if(status_map[bx[cnt]][by[cnt] + i] == '2') break;
                 }
                 for(int i = 0; i <= bomb_length1; ++i)
-                {
+                { //left
                     if(status_map[bx[cnt]][by[cnt] - i] == '0' && by[cnt] + i > 0)  {bomb_map[bx[cnt]][by[cnt] - i] = '0'; status_map[bx[cnt]][by[cnt] - i] = '0';}
                     if(status_map[bx[cnt]][by[cnt] - i] == '1') {bomb_map[bx[cnt]][by[cnt] - i] = '0'; status_map[bx[cnt]][by[cnt] - i] = '0'; break;}
                     if(status_map[bx[cnt]][by[cnt] - i] == '2') break;
@@ -179,7 +181,8 @@ void player1::update1(float delta, const Uint8 *keyState, char status_map[][100]
         cnt++;
     }
 
-    if(power_map[(position_rect1.y + 32) / 64][(position_rect1.x + 32) / 64] == '1')
+    // absorb power
+    if(power_map[(position_rect1.y + 32) / 64][(position_rect1.x + 32) / 64] == '1') // wider explosion area
     {
         Mix_PlayChannel(3, pop, 0);
         bomb_length1++;
@@ -187,7 +190,7 @@ void player1::update1(float delta, const Uint8 *keyState, char status_map[][100]
         power_map[(position_rect1.y + 32) / 64][(position_rect1.x + 32) / 64] = '0';
     }
 
-    if(power_map[(position_rect1.y + 32) / 64][(position_rect1.x + 32) / 64] == '2')
+    if(power_map[(position_rect1.y + 32) / 64][(position_rect1.x + 32) / 64] == '2') // speed enhanced
     {
         Mix_PlayChannel(3, pop, 0);
         waittime-=100;
@@ -195,7 +198,7 @@ void player1::update1(float delta, const Uint8 *keyState, char status_map[][100]
         power_map[(position_rect1.y + 32) / 64][(position_rect1.x + 32) / 64] = '0';
     }
 
-    if(power_map[(position_rect1.y + 32) / 64][(position_rect1.x + 32) / 64] == '3')
+    if(power_map[(position_rect1.y + 32) / 64][(position_rect1.x + 32) / 64] == '3') // more bombs in pocket
     {
         Mix_PlayChannel(3, pop, 0);
         waittime+=150;
@@ -214,7 +217,7 @@ void player1::update1(float delta, const Uint8 *keyState, char status_map[][100]
             if(cropRect.x >= texture_width) cropRect.x = 0;
         }
     }
-    else
+    else // stand still
     {
         frame_counter = 0;
         cropRect.x = 0;
