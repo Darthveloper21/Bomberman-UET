@@ -9,6 +9,8 @@ using namespace std;
 const int SCREEN_WIDTH = 1344;
 const int SCREEN_HEIGHT = 896;
 
+// player1.cpp and player2.cpp have the same code and logic, only variables' name differences and bomb character to avoid overlap
+
 player1::player1(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, int framex, int framey)
 {
     SDL_QueryTexture(texture, NULL, NULL, &cropRect.w, &cropRect.h);
