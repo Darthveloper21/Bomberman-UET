@@ -60,7 +60,7 @@ void player1::update1(float delta, const Uint8 *keyState, char status_map[][100]
 
     if(status_map[position_rect1.y / 64][position_rect1.x / 64] == '0' && status_map[(position_rect1.y + frame_height) / 64][(position_rect1.x + frame_width) / 64] == '0'
     && status_map[(position_rect1.y + frame_height) / 64][position_rect1.x / 64] == '0' && status_map[position_rect1.y / 64][(position_rect1.x + frame_width) / 64] == '0') // collision
-    {
+    { // no barrier
         if(keyState[keys[0]]) // up
         {
             position_rect1.y -= move_speed1 * delta;
