@@ -32,6 +32,9 @@ Now you can absorb bomb-pocket-power pill (Problem solved, YAY! 😄)
 Update explosion effect, fixing bugs, still it works ... badly, but better 😀, fx is no more muted when bombs explode.
 
 ## Version 1.1.1
-    Box now stops fire from spreading around
+    Box now stops fire from spreading around.
     Easier to control the characters.
 
+## Version 1.1.2
+    Optimize source code and program.
+    No more RAM and memory consumption, it's stable now.
