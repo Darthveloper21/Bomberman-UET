@@ -40,7 +40,8 @@ player2::~player2()
     //SDL_DestroyTexture(texture);
 }
 
-void player2::update2(float delta, const Uint8 *keyState, char status_map[][100], char bomb_map[][100], char power_map[][100], SDL_Event keyboard)
+void player2::update2(float delta, const Uint8 *keyState, char status_map[][100], char bomb_map[][100], char power_map[][100],
+                      SDL_Event keyboard, Mix_Chunk* setbomb, Mix_Chunk* explosion, Mix_Chunk* pop)
 {
     int cnt = 0;
     active = true;

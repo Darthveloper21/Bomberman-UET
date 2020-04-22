@@ -9,8 +9,6 @@ using namespace std;
 const int SCREEN_WIDTH = 1344;
 const int SCREEN_HEIGHT = 896;
 
-// player1.cpp and player2.cpp have the same code and logic, only variables' name differences and bomb character to avoid overlap
-
 player1::player1(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, int framex, int framey)
 {
     SDL_QueryTexture(texture, NULL, NULL, &cropRect.w, &cropRect.h);
@@ -42,7 +40,8 @@ player1::~player1()
     //SDL_DestroyTexture(texture);
 }
 
-void player1::update1(float delta, const Uint8 *keyState, char status_map[][100], char bomb_map[][100], char power_map[][100], SDL_Event keyboard)
+void player1::update1(float delta, const Uint8 *keyState, char status_map[][100], char bomb_map[][100], char power_map[][100],
+                      SDL_Event keyboard, Mix_Chunk* setbomb, Mix_Chunk* explosion, Mix_Chunk* pop)
 {
     int cnt = 0;
     active = true;
@@ -208,7 +207,7 @@ void player1::update1(float delta, const Uint8 *keyState, char status_map[][100]
         power_map[(position_rect1.y + 32) / 64][(position_rect1.x + 32) / 64] = '0';
     }
 
-    if(active)
+    if(active) // stand still
     {
         frame_counter += delta;
 
@@ -219,7 +218,7 @@ void player1::update1(float delta, const Uint8 *keyState, char status_map[][100]
             if(cropRect.x >= texture_width) cropRect.x = 0;
         }
     }
-    else // stand still
+    else
     {
         frame_counter = 0;
         cropRect.x = 0;
