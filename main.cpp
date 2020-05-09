@@ -12,6 +12,7 @@ const int SCREEN_HEIGHT = 896;
 
 bool main_logic = true;
 bool running = true;
+bool sound = true;
 
 char status_map[100][100];
 char bomb_map[100][100];
@@ -59,7 +60,7 @@ int main(int argc, char* argv[])
     SDL_Texture* character2 = IMG_LoadTexture(renderer, "game resources/yellow-dude.png");
 
     // GUI
-    SDL_Texture* bgnewgame = IMG_LoadTexture(renderer, "game resources/background1.png");
+	SDL_Texture* bgnewgame = IMG_LoadTexture(renderer, "game resources/background1.png");
     SDL_Texture* newgame1 = IMG_LoadTexture(renderer, "game resources/newgame_frame.png");
     SDL_Texture* newgame2 = IMG_LoadTexture(renderer, "game resources/newgame.png");
     SDL_Texture* play_again1 = IMG_LoadTexture(renderer, "game resources/play_again_frame.png");
@@ -73,25 +74,25 @@ int main(int argc, char* argv[])
     while(main_logic)
     {
         SDL_RenderClear(renderer);
-        if(newgame(control, renderer, newgame1, newgame2, bgnewgame, 472, 400, 400, 125, window) == false) {main_logic = false; running = false;}
-        start();
-        player1 player1(renderer, character1, 64, 64, 3, 4);
+		if(newgame(control, renderer, newgame1, newgame2, bgnewgame, 472, 400, 400, 125, window) == false) {main_logic = false; running = false;}
+		start();
+		player1 player1(renderer, character1, 64, 64, 3, 4);
         player2 player2(renderer, character2, 972, 788, 3, 4);
 
-        int x1, y1, x2, y2;
+		int x1, y1, x2, y2;
         int prev_time = 0;
         int current_time = 0;
         float delta_time = 0;
         int win_number = 0;
 
-        loadmyimage_but_des(background, renderer, 0, 0, 1344, 896);
-        SDL_RenderPresent(renderer);
+		loadmyimage_but_des(background, renderer, 0, 0, 1344, 896);
+		SDL_RenderPresent(renderer);
 
-        while(running)
-        {
-            prev_time = current_time;
-            current_time = SDL_GetTicks();
-            delta_time = (current_time - prev_time) / 250.0f;
+		while(running)
+		{
+		    prev_time = current_time;
+			current_time = SDL_GetTicks();
+			delta_time = (current_time - prev_time) / 250.0f;
 
             if(SDL_PollEvent(&control) != 0 && keyState[SDL_SCANCODE_ESCAPE] || control.type == SDL_QUIT)
             {
@@ -101,67 +102,70 @@ int main(int argc, char* argv[])
                 break;
             }
             if(keyState[SDL_SCANCODE_1])
+            {
                 if(!Mix_PlayingMusic()) Mix_PlayMusic(bgm, -1);
+                sound = true;
+            }
             if(keyState[SDL_SCANCODE_2])
             {
-                Mix_HaltChannel(-1);
+                sound = false;
                 Mix_HaltMusic();
             }
 
-            x1 = player1.position_rect1.x;
-            y1 = player1.position_rect1.y;
-            x2 = player2.position_rect2.x;
-            y2 = player2.position_rect2.y;
+			x1 = player1.position_rect1.x;
+			y1 = player1.position_rect1.y;
+			x2 = player2.position_rect2.x;
+			y2 = player2.position_rect2.y;
 
-            SDL_RenderClear(renderer);
-            loadmyimage_but_des(background, renderer, 0, 0, 1344, 896);
+			SDL_RenderClear(renderer);
+			loadmyimage_but_des(background, renderer, 0, 0, 1344, 896);
 
-            for(int i = 0; i < 14; ++i)
-                for(int j = 0; j < 17; ++j)
-                {
-                    if(power_map[i][j] == '1') loadmyimage_but_des(power_1, renderer, j*64, i*64, 64, 64);
-                    if(power_map[i][j] == '2') loadmyimage_but_des(power_2, renderer, j*64, i*64, 64, 64);
-                    if(power_map[i][j] == '3') loadmyimage_but_des(power_3, renderer, j*64, i*64, 64, 64);
-                }
+			for(int i = 0; i < 14; ++i)
+			    for(int j = 0; j < 17; ++j)
+            	{
+                	if(power_map[i][j] == '1') loadmyimage_but_des(power_1, renderer, j*64, i*64, 64, 64);
+                	if(power_map[i][j] == '2') loadmyimage_but_des(power_2, renderer, j*64, i*64, 64, 64);
+                	if(power_map[i][j] == '3') loadmyimage_but_des(power_3, renderer, j*64, i*64, 64, 64);
+            	}
 
-            for(int i = 0; i < 14; ++i)
-                for(int j = 0; j < 17; ++j)
-                {
-                    if(status_map[i][j] == '2') loadmyimage_but_des(brick, renderer, j*64, i*64, 64, 64);
-                    else if(status_map[i][j] == '1') loadmyimage_but_des(box, renderer, j*64, i*64, 64, 64);
-                    if(bomb_map[i][j] == '*' or bomb_map[i][j] == 'b') loadmyimage_but_des(bomb, renderer, j*64, i*64, 64, 64);
-                    else if(bomb_map[i][j] == 'f')
-                    {
-                        loadmyimage_but_des(fire, renderer, j*64, i*64, 64, 64);
-                        if(bomb_map[y1 / 64][x1 / 64] == 'f' or bomb_map[(y1 + 40) / 64][x1 / 64] == 'f'
-                        or bomb_map[y1 / 64][(x1 + 40) / 64] == 'f' or bomb_map[(y1 + 40) / 64][(x1 + 40) / 64] == 'f')
-                            win_number = 2;
-                        if(bomb_map[y2 / 64][x2 / 64] == 'f' or bomb_map[(y2 + 40) / 64][x2 / 64] == 'f'
-                        or bomb_map[y2 / 64][(x2 + 40) / 64] == 'f' or bomb_map[(y2 + 40) / 64][(x2 + 40) / 64] == 'f')
-                            win_number = 1;
-                    }
-                }
+			for(int i = 0; i < 14; ++i)
+			    for(int j = 0; j < 17; ++j)
+				{
+				    if(status_map[i][j] == '2') loadmyimage_but_des(brick, renderer, j*64, i*64, 64, 64);
+                	else if(status_map[i][j] == '1') loadmyimage_but_des(box, renderer, j*64, i*64, 64, 64);
+                	if(bomb_map[i][j] == '*' or bomb_map[i][j] == 'b') loadmyimage_but_des(bomb, renderer, j*64, i*64, 64, 64);
+                	else if(bomb_map[i][j] == 'f')
+					{
+                    	loadmyimage_but_des(fire, renderer, j*64, i*64, 64, 64);
+                    	if(bomb_map[y1 / 64][x1 / 64] == 'f' or bomb_map[(y1 + 40) / 64][x1 / 64] == 'f'
+                    	or bomb_map[y1 / 64][(x1 + 40) / 64] == 'f' or bomb_map[(y1 + 40) / 64][(x1 + 40) / 64] == 'f')
+	                        win_number = 2;
+    	                if(bomb_map[y2 / 64][x2 / 64] == 'f' or bomb_map[(y2 + 40) / 64][x2 / 64] == 'f'
+        	            or bomb_map[y2 / 64][(x2 + 40) / 64] == 'f' or bomb_map[(y2 + 40) / 64][(x2 + 40) / 64] == 'f')
+            	            win_number = 1;
+                	}
+            	}
 
-            if(win_number == 1) {loadmyimage_but_des(player1_win, renderer, 1088, 0, 256, 256); running = false;}
-            else if(win_number == 2) {loadmyimage_but_des(player2_win, renderer, 1088, 0, 256, 256); running = false;}
+			if(win_number == 1) {loadmyimage_but_des(player1_win, renderer, 1088, 0, 256, 256); running = false;}
+			else if(win_number == 2) {loadmyimage_but_des(player2_win, renderer, 1088, 0, 256, 256); running = false;}
 
-            player1.update1(delta_time, keyState, status_map, bomb_map, power_map, control, setbomb, explosion, pop);
-            player2.update2(delta_time, keyState, status_map, bomb_map, power_map, control, setbomb, explosion, pop);
-            player1.draw1(renderer, character1);
-            player2.draw2(renderer, character2);
-            SDL_RenderPresent(renderer);
-        }
-        player1.~player1();
-        player2.~player2();
+			player1.update1(delta_time, keyState, status_map, bomb_map, power_map, control, setbomb, explosion, pop, sound);
+			player2.update2(delta_time, keyState, status_map, bomb_map, power_map, control, setbomb, explosion, pop, sound);
+			player1.draw1(renderer, character1);
+			player2.draw2(renderer, character2);
+			SDL_RenderPresent(renderer);
+    	}
+    	player1.~player1();
+    	player2.~player2();
 
-        if(win_number == 0) break;
-        if(play_again(control, renderer, play_again1, play_again2, 1098, 796, 236, 50, window) == true)
+    	if(win_number == 0) break;
+    	if(play_again(control, renderer, play_again1, play_again2, 1098, 796, 236, 50, window) == true)
         {
             running = true;
             main_logic = true;
             continue;
         }
-        else {main_logic = false; running = false;}
+    	else {main_logic = false; running = false;}
     }
 
     quitSDL(window, renderer);
@@ -217,10 +221,10 @@ void initSDL(SDL_Window* &window, SDL_Renderer* &renderer)
 
 void quitSDL(SDL_Window* window, SDL_Renderer* renderer)
 {
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
-    IMG_Quit();
-    SDL_Quit();
+	SDL_DestroyRenderer(renderer);
+	SDL_DestroyWindow(window);
+	IMG_Quit();
+	SDL_Quit();
 }
 
 void start()
@@ -271,7 +275,7 @@ void loadmyimage_but_des(SDL_Texture* texture, SDL_Renderer* renderer, int xd, i
 bool newgame(SDL_Event mousemotion, SDL_Renderer* renderer, SDL_Texture* newgame1, SDL_Texture* newgame2, SDL_Texture* background,
              int desx, int desy, int widthx, int heighty, SDL_Window* window)
 {
-    SDL_RenderClear(renderer);
+	SDL_RenderClear(renderer);
     const Uint8 *keyState;
     keyState = SDL_GetKeyboardState(NULL);
 
@@ -279,40 +283,43 @@ bool newgame(SDL_Event mousemotion, SDL_Renderer* renderer, SDL_Texture* newgame
     SDL_RenderPresent(renderer);
     bool check = true;
     while(check == true)
-    {
-        if(SDL_WaitEvent(&mousemotion) != 0 && (keyState[SDL_SCANCODE_ESCAPE] || mousemotion.type == SDL_QUIT))
+	{
+		if(SDL_WaitEvent(&mousemotion) != 0 && (keyState[SDL_SCANCODE_ESCAPE] || mousemotion.type == SDL_QUIT))
         {
             main_logic = false;
             running = false;
-            quitSDL(window, renderer);
+        	quitSDL(window, renderer);
             return false;
         }
         if(keyState[SDL_SCANCODE_1])
+        {
             if(!Mix_PlayingMusic()) Mix_PlayMusic(bgm, -1);
+            sound = true;
+        }
         if(keyState[SDL_SCANCODE_2])
         {
-            Mix_HaltChannel(-1);
+            sound = false;
             Mix_HaltMusic();
         }
-        else if(mousemotion.type == SDL_MOUSEMOTION)
-        {
-            if(mousemotion.button.x > desx && mousemotion.button.x < (widthx+desx) && mousemotion.button.y > desy && mousemotion.button.y < (heighty+desy))
+		else if(mousemotion.type == SDL_MOUSEMOTION)
+		{
+		    if(mousemotion.button.x > desx && mousemotion.button.x < (widthx+desx) && mousemotion.button.y > desy && mousemotion.button.y < (heighty+desy))
             {
                 loadmyimage_but_des(background, renderer, 0, 0, 1344, 896);
-                loadmyimage_but_des(newgame1, renderer, desx, desy, widthx, heighty);
+            	loadmyimage_but_des(newgame1, renderer, desx, desy, widthx, heighty);
                 SDL_RenderPresent(renderer);
             }
-            else
-            {
-                loadmyimage_but_des(background, renderer, 0, 0, 1344, 896);
-                loadmyimage_but_des(newgame2, renderer, desx, desy, widthx, heighty);
+        	else
+        	{
+        	    loadmyimage_but_des(background, renderer, 0, 0, 1344, 896);
+        		loadmyimage_but_des(newgame2, renderer, desx, desy, widthx, heighty);
                 SDL_RenderPresent(renderer);
-            }
-        }
-        else if(mousemotion.type == SDL_MOUSEBUTTONUP
+        	}
+    	}
+    	else if(mousemotion.type == SDL_MOUSEBUTTONUP
         && (mousemotion.button.x > desx && mousemotion.button.x < (widthx+desx) && mousemotion.button.y > desy && mousemotion.button.y < (heighty+desy)))
         {
-            return true;
+			return true;
             break;
         }
     }
@@ -329,43 +336,45 @@ bool play_again(SDL_Event mousemotion, SDL_Renderer* renderer, SDL_Texture* play
     SDL_RenderPresent(renderer);
     bool check = true;
     while(check == true)
-    {
-        if(SDL_WaitEvent(&mousemotion) != 0 && (keyState[SDL_SCANCODE_ESCAPE] || mousemotion.type == SDL_QUIT))
+	{
+		if(SDL_WaitEvent(&mousemotion) != 0 && (keyState[SDL_SCANCODE_ESCAPE] || mousemotion.type == SDL_QUIT))
         {
             main_logic = false;
             running = false;
-            quitSDL(window, renderer);
+        	quitSDL(window, renderer);
             return false;
         }
         if(keyState[SDL_SCANCODE_1])
+        {
             if(!Mix_PlayingMusic()) Mix_PlayMusic(bgm, -1);
+            sound = true;
+        }
         if(keyState[SDL_SCANCODE_2])
         {
-            Mix_HaltChannel(-1);
+            sound = false;
             Mix_HaltMusic();
         }
-        else if(mousemotion.type == SDL_MOUSEMOTION)
-        {
-            if(mousemotion.button.x > desx && mousemotion.button.x < (widthx+desx) && mousemotion.button.y > desy && mousemotion.button.y < (heighty+desy))
+		else if(mousemotion.type == SDL_MOUSEMOTION)
+		{
+		    if(mousemotion.button.x > desx && mousemotion.button.x < (widthx+desx) && mousemotion.button.y > desy && mousemotion.button.y < (heighty+desy))
             {
-                loadmyimage_but_des(play_again1, renderer, desx, desy, widthx, heighty);
+            	loadmyimage_but_des(play_again1, renderer, desx, desy, widthx, heighty);
                 SDL_RenderPresent(renderer);
             }
-            else
-            {
-                loadmyimage_but_des(play_again2, renderer, desx, desy, widthx, heighty);
+        	else
+        	{
+        		loadmyimage_but_des(play_again2, renderer, desx, desy, widthx, heighty);
                 SDL_RenderPresent(renderer);
-            }
-        }
-        else if(mousemotion.type == SDL_MOUSEBUTTONUP
+        	}
+    	}
+    	else if(mousemotion.type == SDL_MOUSEBUTTONUP
         && (mousemotion.button.x > desx && mousemotion.button.x < (widthx+desx) && mousemotion.button.y > desy && mousemotion.button.y < (heighty+desy)))
         {
-            return true;
+			return true;
             break;
         }
     }
 
     SDL_DestroyTexture(play_again1);
     SDL_DestroyTexture(play_again2);
-    SDL_RenderClear(renderer);
 }

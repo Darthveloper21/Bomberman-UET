@@ -41,7 +41,7 @@ player1::~player1()
 }
 
 void player1::update1(float delta, const Uint8 *keyState, char status_map[][100], char bomb_map[][100], char power_map[][100],
-                      SDL_Event keyboard, Mix_Chunk* setbomb, Mix_Chunk* explosion, Mix_Chunk* pop)
+                      SDL_Event keyboard, Mix_Chunk* setbomb, Mix_Chunk* explosion, Mix_Chunk* pop, bool sound)
 {
     int cnt = 0;
     active = true;
@@ -106,7 +106,7 @@ void player1::update1(float delta, const Uint8 *keyState, char status_map[][100]
 
         if(keyState[keys[4]] && explode[press_cnt] == false && press_cnt < pocket && keyboard.type == SDL_KEYDOWN && bomb_map[bombRect.y/64][bombRect.x/64] == '0') // bomb
         {
-            Mix_PlayChannel(1, setbomb, 0);
+            if(sound == true) Mix_PlayChannel(1, setbomb, 0);
             bx[press_cnt] = bombRect.y / 64; by[press_cnt] = bombRect.x / 64;
             bomb_map[bx[press_cnt]][by[press_cnt]] = '*';
             initbomb[press_cnt] = bombtime[press_cnt];
@@ -121,7 +121,7 @@ void player1::update1(float delta, const Uint8 *keyState, char status_map[][100]
         bombtime[cnt] = SDL_GetTicks();
         if(bombtime[cnt] - initbomb[cnt] >= waittime && explode[cnt] == true) // exploded for 0.4 sec
         {
-            Mix_PlayChannel(2, explosion, 0);
+            if(sound == true) Mix_PlayChannel(2, explosion, 0);
             if(status_map[bx[cnt]][by[cnt]] != '2') bomb_map[bx[cnt]][by[cnt]] = 'f';
             for(int i = 0; i <= bomb_length1; ++i)
             {
@@ -185,7 +185,7 @@ void player1::update1(float delta, const Uint8 *keyState, char status_map[][100]
     // absorb power
     if(power_map[(position_rect1.y + 32) / 64][(position_rect1.x + 32) / 64] == '1') // wider explosion area
     {
-        Mix_PlayChannel(3, pop, 0);
+        if(sound == true) Mix_PlayChannel(3, pop, 0);
         bomb_length1++;
         waittime+=100;
         power_map[(position_rect1.y + 32) / 64][(position_rect1.x + 32) / 64] = '0';
@@ -193,7 +193,7 @@ void player1::update1(float delta, const Uint8 *keyState, char status_map[][100]
 
     if(power_map[(position_rect1.y + 32) / 64][(position_rect1.x + 32) / 64] == '2') // speed enhanced
     {
-        Mix_PlayChannel(3, pop, 0);
+        if(sound == true) Mix_PlayChannel(3, pop, 0);
         waittime-=100;
         move_speed1+=2.5f;
         power_map[(position_rect1.y + 32) / 64][(position_rect1.x + 32) / 64] = '0';
@@ -201,7 +201,7 @@ void player1::update1(float delta, const Uint8 *keyState, char status_map[][100]
 
     if(power_map[(position_rect1.y + 32) / 64][(position_rect1.x + 32) / 64] == '3') // more bombs in pocket
     {
-        Mix_PlayChannel(3, pop, 0);
+        if(sound == true) Mix_PlayChannel(3, pop, 0);
         waittime+=150;
         pocket++;
         power_map[(position_rect1.y + 32) / 64][(position_rect1.x + 32) / 64] = '0';

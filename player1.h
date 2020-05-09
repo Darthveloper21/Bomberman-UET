@@ -31,7 +31,7 @@ public:
     virtual ~player1();
 
     void update1(float delta, const Uint8 *keyState, char status_map[][100], char bomb_map[][100], char power_map[][100],
-                 SDL_Event keyboard, Mix_Chunk* setbomb, Mix_Chunk* explosion, Mix_Chunk* pop);
+                 SDL_Event keyboard, Mix_Chunk* setbomb, Mix_Chunk* explosion, Mix_Chunk* pop, bool sound);
     void draw1(SDL_Renderer* renderer, SDL_Texture* texture);
     SDL_Rect position_rect1;
     float move_speed1;
