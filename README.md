@@ -38,3 +38,4 @@ Update explosion effect, fixing bugs, still it works ... badly, but better 😀,
 ## Version 1.1.2
     Optimize source code and program.
     No more RAM and memory consumption, it's stable now.
+    1.1.2.1: Fixing sound problems, press 2 to mute everything.
